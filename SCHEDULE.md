@@ -89,3 +89,17 @@
 	- Calling `super()`
 - Many parents
 	- Gets properties and methods from all parents
+
+## `7_moreSyntax`
+
+## `8_tkinterBasic`
+
+## `9_file_io`
+
+## `10_tkinterAdvanced`
+
+## `11_web_html`
+
+## `12_bs4`
+
+## `13_moreBs4_json`
