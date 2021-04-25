@@ -1,90 +1,140 @@
-import pandas
-import csv
-import random  # import the random library to allow the use of random.randint & random.choice
+# Import the random library to allow the use of randint() & choice()
+from random import randint, choice
 
 
+def intInput(message, options=None):
+    userInput = None
+    while userInput == None:
+        try:
+            userInput = int(input(message))
+            if options is not None and userInput not in options:
+                print(f"Oops! What you typed isn't in {options}")
+                userInput = None
+        # When user does not input a number, a ValueError is raised
+        except ValueError:
+            if userInput == '':
+                print("Oops! Did you accidentally submit a blank text box?")
+            else:
+                print("Oops! Did you accidentally type a string instead of an integer?")
+            userInput = None
+    return userInput
+
+
+def maxIndex(array):
+    duplicate = False
+    maxIdx = 0
+    for currentIdx in range(len(array)):
+        if (array[currentIdx] > array[maxIdx]):
+            maxIdx = currentIdx
+            duplicate = False
+        elif (array[currentIdx] == array[maxIdx]):
+            duplicate = True
+    if duplicate:
+        return None
+    return maxIdx
+
+
+numRounds = 2
+numQuestions = 3
+
+print("Math Engine roaring to life!")
+player1 = input("Tell us your name, Player One --> ")
+player2 = input("What about you, Player Two? --> ")
 print("Welcome to the maths quiz")
-print("*********************************")
-# initialise name variable to hold users name input
-name = input("Please enter your name: ")
-print("*********************************")
-# initialise variable to store difficulty selected
+print(f"Good luck {player1} and {player2}!\n")
+# Initialise names list to hold users name input for both players
+names = (player1, player2)
 
-difficulty = int(input("Please choose a difficulty 1=easy, 2=hard "))
+# Initialise variable to store difficulty selected
+difficulty = intInput(
+    "We can do this easy (type '1') way, or the hard (type '2') way...", (1, 2))
 if difficulty == 1:
-    print("You have selected the easy quiz")
+    print("So you're a rookie, I see. Have no fear, for I'll go easy on you.")
+# Difficulty can only be 1 or 2, so else can be used here
 else:
-    print("You have selected the hard quiz")
+    print("Okkk so we're gonna do this the hard way.")
 
-print("*********************************")
-print("Good luck " + name + "!")
-# initialise score variable, set score to 0
-print("*********************************")
-score = 0
-# LOOP STARTS HERE use x as loop total and i as loop start point. After each loop/question, i will grow until it reaches x
-x = 10
-i = 0
 
-while i < x:
-    # initialise two variables to be set to a random value between 1 and 10, these will form the two numbers for each question
-    if difficulty == 1:
-        val1 = random.randint(1, 10)
-        val2 = random.randint(1, 10)
-    else:
-        val1 = random.randint(1, 100)
-        val2 = random.randint(1, 100)
-    # the op list stores the values for possible operators for the questions
-    op = ("+", "-", "*")
-    # random.choice will randomly select one of the ops from the ops list
-    operator = random.choice(op)
-    # the question will then be made up of these 3 random variables
-    question = str(val1) + operator + str(val2)
-    print(question)
-    print("*********************************")
-    # increment i by 1 to log that a question has been asked
-    i = i + 1
-    # work out the correct answer to the Q depending on which operator was randomly selected for this question.
-    if operator == "+":
-        # this will need to change with each question (randomised)
-        answer = val1 + val2
-    elif operator == "-":
-        answer = val1 - val2
-    else:
-        answer = val1 * val2
-    playerAnswer = int(input("What is the answer?"))
-    # check whether the answer input is correct
-    print("*********************************")
-    if answer == playerAnswer:  # this still does not work here yet
-        print("Correct")
-        # increase score for a correct answer
-        score = score + 1
-    elif playerAnswer > answer:
-        # if wrong answer, work out whether too high or too low
-        print("Sorry, you are incorrect, you are too high")
-        x = playerAnswer - answer
-    else:
-        y = answer - playerAnswer
-        print("Sorry, you are incorrect, you are too low")
-        print("You are too low by... " + str(y))
-    print("*********************************")
+# OUTER GAME LOOP STARTS HERE
+# Use numRounds as loop total and roundIdx as loop start point.
+# After each loop/question, roundIdx will grow until it reaches numRounds
+wins = [0, 0]
+for roundIdx in range(numRounds):
+    scores = [0, 0]
+    # OUTER ROUND LOOP STARTS HERE
+    # Use numQuestions as loop total and roundIdx as loop start point.
+    # After each loop/question, roundIdx will grow until it reaches numQuestions
+    # Asks "numQuestions" questions to both players in a single round.
+    print(f"Round {roundIdx+1}? Begin.")
+    for questionIdx in range(numQuestions):
+        # INNER PLAYER LOOP STARTS HERE
+        # Asks a question to each player, use playerIdx to know which player.
+        for playerIdx in range(2):
+            # Set two variables to a random integer, these will form the two numbers for each question
+            # Select integer from 1 to 10 if player selected easy level
+            if difficulty == 1:
+                a = randint(1, 10)
+                b = randint(1, 10)
+            else:
+                # Select integer from 1 to 100 if player selected hard level
+                a = randint(1, 100)
+                b = randint(1, 100)
+            # The possibleOperators list stores the values for possible operators for the questions
+            # Test players on addition, subtraction, or multiplication
+            possibleOperators = ("+", "-", "*")
+            # choice() will randomly select one operator from the possibleOperators list
+            operator = choice(possibleOperators)
+            # Calculate the correct answer depending on the randomly selected operator.
+            # Answer is recalculated with each question
+            if operator == '+':
+                answer = a+b
+            elif operator == '-':
+                answer = a-b
+            elif operator == '*':
+                answer = a*b
+            print(
+                f"Question {questionIdx+1}. Ready Player {playerIdx+1}: {names[playerIdx]}!")
+            playerAnswer = intInput(f"{a} {operator} {b} = ")
+            # Check whether the student-provided answer is correct
+            if answer == playerAnswer:
+                print("Yea that's right :D")
+                # Increment score for current player by 1, since they got it correct
+                scores[playerIdx] += 1
+            else:
+                # Calculate absolute difference between correct answer and actual answer: how much is the player off by?
+                absoluteDifference = abs(answer - playerAnswer)
+                # If wrong answer, work out whether too high or too low
+                if playerAnswer < answer:
+                    reason = "low"
+                else:
+                    reason = "high"
+                print(
+                    f"Oh no, ya got it wrong. You're too {reason} by {absoluteDifference} :(")
+                print(f"The correct answer is {answer}...")
+        # INNER PLAYER LOOP STOPS HERE
+    # OUTER ROUND LOOP ENDS HERE
+    # Report points earned for each player in round with loop
+    for playerIdx in range(2):
+        print(
+            f"{names[playerIdx]} scored {scores[playerIdx]} points in round {roundIdx+1}!")
+    try:
+        roundWinner = maxIndex(scores)
+        print(f"{names[roundWinner]}, nice. You won the round.")
+        wins[roundWinner] += 1
+    except TypeError:
+        print("It's a draw. Everyone's a winner!")
+# OUTER GAME LOOP ENDS
 
-# LOOP STOPS HERE
-# output name and final score
-print("Thanks for playing " + name)
-print("Your score is: " + str(score))
-print("*************END*****************")
 
-with open('scores.csv', mode='a') as csv_file:
-    fieldnames = ['Name', 'Score', 'Difficulty']
-    writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
-
-    # writer.writeheader()
-    writer.writerow({'Name': name, 'Score': score, 'Difficulty': difficulty})
-# this will output the full scores list in a nicer format after each quiz result by reading in the scores csv file
-f = pandas.read_csv('scores.csv')
-# this will query the csv data so only easy levels are displayed
-f.query('Difficulty == 1', inplace=True)
-# this will sort by score in descending order
-f.sort_values(["Score"], axis=0,
-              ascending=False, inplace=True)
-print(f)
+print("Time's up! Let's tally it up, shall we?")
+for playerIdx in range(2):
+    print(f"{names[playerIdx]} won {wins[playerIdx]} times.")
+try:
+    gameWinner = maxIndex(wins)
+    print(
+        f"Wow {names[gameWinner]}, it's my honour to declare you, the Winner!")
+except TypeError:
+    print("It's a...draw? Hats off to you two for pulling it off, do you know how rare that is?")
+print("Anyways, thanks for playing!")
+print("You'll come back...")
+print("...right?")
