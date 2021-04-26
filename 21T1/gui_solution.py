@@ -5,7 +5,7 @@ import PySimpleGUI as sg
 sg.theme('LightGreen4')
 font = ('Comic Sans MS', 18)
 firstRow = [sg.Text('Welcome to the Math Quiz!', key='_message', size=(32, 2), font=font)]
-secondRow = [sg.Input(do_not_clear=False, justification='center', key='input', font=font),
+secondRow = [sg.Input(do_not_clear=False, justification='center', key='_input', font=font),
              sg.Button('Next', font=font, key=('_button'), bind_return_key=True)]
 layout = [firstRow, secondRow]
 
@@ -22,7 +22,7 @@ def gInput(message):
         if event == None:
             raise SystemExit("Exit button clicked")
         if event == "_button":
-            return values['input']
+            return values['_input']
 
 def intInput(message, options=None):
     userInput = None
