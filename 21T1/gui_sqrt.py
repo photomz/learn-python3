@@ -1,7 +1,7 @@
 import PySimpleGUI as sg
 
 firstRow = [sg.Text('Welcome', key='_message', size=(40,1))]
-secondRow = [sg.Input(key='_input'), sg.Button('Next', key=('_button'))]
+secondRow = [sg.Input(key='_input'), sg.Button('Calculate', key=('_button'))]
 layout = [firstRow, secondRow]
 
 window = sg.Window('Square Root Calculator', layout, finalize=True)
