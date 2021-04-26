@@ -14,15 +14,10 @@ global window
 window = sg.Window('Math Quiz', layout,
                    auto_size_buttons=False, grab_anywhere=True)
 
-
-def gSleep(sleepTime=1000):
-    window.Read(timeout=sleepTime)
-
-
 def gPrint(message, sleepTime=1000):
     window.Finalize()
     window.FindElement('_message').Update(message)
-    gSleep(sleepTime)
+    window.Read(timeout=sleepTime)
 
 
 def gInput(message):
