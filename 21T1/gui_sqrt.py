@@ -1,5 +1,3 @@
-# Import the random library to allow the use of randint() & choice()
-from random import randint, choice
 import PySimpleGUI as sg
 
 firstRow = [sg.Text('Welcome', key='_message', size=(40,1))]
