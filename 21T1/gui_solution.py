@@ -2,23 +2,18 @@
 from random import randint, choice
 import PySimpleGUI as sg
 
-
-baseNumber = 4
-firstRow = [sg.Text('Welcome to the Math Quiz!', key='_message', size=(
-    baseNumber*8, baseNumber), font=('Helvetica', 30))]
-secondRow = [sg.Input(size=(baseNumber*6, baseNumber*2), do_not_clear=False,
-                      justification='center', key='input', font=('Helvetica', 20)),
-             sg.Button('Next', size=(baseNumber*2, baseNumber*2), font=('Helvetica', 20), key=('_button'))]
+sg.theme('LightGreen4')
+font = ('Comic Sans MS', 18)
+firstRow = [sg.Text('Welcome to the Math Quiz!', key='_message', size=(32, 2), font=font)]
+secondRow = [sg.Input(do_not_clear=False, justification='center', key='input', font=font),
+             sg.Button('Next', font=font, key=('_button'), bind_return_key=True)]
 layout = [firstRow, secondRow]
-global window
-window = sg.Window('Math Quiz', layout,
-                   auto_size_buttons=False, grab_anywhere=True)
+
+window = sg.Window('Maths Quiz', layout, finalize=True)
 
 def gPrint(message, sleepTime=1000):
-    window.Finalize()
     window.FindElement('_message').Update(message)
     window.Read(timeout=sleepTime)
-
 
 def gInput(message):
     gPrint(message, 0)
@@ -28,7 +23,6 @@ def gInput(message):
             raise SystemExit("Exit button clicked")
         if event == "_button":
             return values['input']
-
 
 def intInput(message, options=None):
     userInput = None
